@@ -1,3 +1,4 @@
+use formula_structs::firing_data::StatLerp;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::{
@@ -7,6 +8,7 @@ use std::{
 use thiserror::Error;
 use tracing::{span, Level};
 
+pub mod enums;
 pub mod formula_structs;
 
 pub type BungieHash = u32;
@@ -18,31 +20,31 @@ pub type Time = u64;
 )]
 pub struct WeaponPath {
     ///Destiny.DestinyItemSubType from bungie api
-    weapon_type: WeaponType,
+    pub weapon_type: WeaponType,
     ///Can be weapon hash or intrinsic hash
-    hash: BungieHash,
+    pub hash: BungieHash,
 }
 
-#[derive(Clone, Serialize, Deserialize, JsonSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, Default)]
 pub struct MappedData<T> {
     data: Vec<T>,
     map: HashMap<WeaponPath, (usize, Time)>,
 }
 
 pub struct WeaponFormula<'a, T> {
-    formula: &'a T,
-    timestamp: Time,
+    pub formula: &'a T,
+    pub timestamp: Time,
 }
 
-#[derive(Clone, Deserialize, JsonSchema)]
+#[derive(Clone, Deserialize, Serialize, JsonSchema, Default)]
 pub struct Inner<T> {
-    formula: T,
-    weapons: Vec<WeaponPath>,
+    pub formula: T,
+    pub weapons: Vec<WeaponPath>,
 }
 
-#[derive(Clone, Deserialize, JsonSchema)]
+#[derive(Clone, Deserialize, Serialize, JsonSchema, Default)]
 pub struct Outer<T> {
-    data: Vec<Inner<T>>,
+    pub data: Vec<Inner<T>>,
 }
 
 #[derive(Debug, Error)]
@@ -59,7 +61,7 @@ fn get_unix_time() -> u64 {
         .as_secs()
 }
 
-fn make_diff<T: Clone + PartialEq>(
+pub fn make_diff<T: Clone + PartialEq>(
     new: Outer<T>,
     old: MappedData<T>,
 ) -> Result<MappedData<T>, DataError> {

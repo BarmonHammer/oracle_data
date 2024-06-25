@@ -7,8 +7,16 @@ edition = "2021"
 
 [dependencies]
 arrayvec = { version = "0.7.4", features = ["serde"] }
+num_enum = "0.7.2"
 schemars = "0.8.16"
 serde = { version = "1.0.197", features = ["derive"] }
 serde_json = "1.0.115"
 thiserror = "1.0.58"
 tracing = "0.1.40"
+#lerp_table = { git = "https://github.com/BarmonHammer/lerp_table.git"}
+lerp_table = {path = "C:/Programming/lerp_table"}
+default_enum = {path = "C:/Programming/foun/default_enum"}
+phf = { version = "0.11.2", features = ["macros"] }
+ron = "0.8.1"
+ciborium = "0.2.2"
+enum-map = { version = "2.7.3", features = ["serde"] }
